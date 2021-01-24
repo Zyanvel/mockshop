@@ -5,7 +5,7 @@ import { FETCH_POPULATE_PRODUCTS_FAILURE,
 const initialState = {
     loading: false,
     products: [],
-    error: ''
+    error: 'Could not find categories'
 }
 
 const reducer = (state = initialState, action) => {
