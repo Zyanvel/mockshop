@@ -25,12 +25,13 @@ export const fetchPopulateProductsFailure = error => {
     }
 }
 
+
 export const fetchProducts = () => {
     return (dispatch) => {
         dispatch(fetchPopulateProductsRequest)
         axios.get('https://fakestoreapi.com/products')
         .then(response => {
-            const products = response.data
+            const products = processResponse(response)
             dispatch(fetchPopulateProductsSuccess(products))
         })
         .catch(error => {
@@ -40,3 +41,15 @@ export const fetchProducts = () => {
     }
 }
 
+const processResponse = (data) => {
+    let result = {};
+    for (var item of data) {
+      const category = item.category;
+      if (result.hasOwnProperty(category)) {
+        result[category].push(item);
+      } else {
+        result[category] = [item];
+      }
+    };
+    return result;
+  }

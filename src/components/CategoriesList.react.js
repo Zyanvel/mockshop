@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
 import  { fetchProducts }  from '../actions/productsActions'
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+//import { groupBy } from '../actions/productsActions'
 
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -32,68 +33,48 @@ const useStyles = makeStyles({
   });
 
 
-function CategoriesList( { productData, fetchProducts }) {
+    const CategoriesList = () => {
     
     const classes = useStyles();
+    const products = useSelector(state => state.products);
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        fetchProducts()
-    })
-    return productData.loading ? (
-        <h2>Loading!</h2>
-    ) : productData.error ? (
-        <h2>{productData.error}</h2>
-    ) : (
-        
-        <div>
+        dispatch(fetchProducts());
+      }, [dispatch]);
+    
+    if (products === undefined || Object.keys(products).length === 0 ) {
+        return <span>Loading</span>
+      }
+      else {
+          return (
             <div>
-                {
-                    productData && productData.products && productData.products.map(
-                        product => 
-                        // {const reGroup = (list, key) => {
-                        //     const newGroup = {};
-                        //     list.forEach(item => {
-                        //         const newItem = Object.assign({}, item);
-                        //         delete newItem[key];
-                        //         newGroup[item[key]] = newGroup[item[key]] || [];
-                        //         newGroup[item[key]].push(newItem);
-                        //     });
-                        //     return newGroup;
-                        // }
-                        <Card className={classes.root}>
-                        <CardActionArea className={classes.cardActionArea}>
-                            <CardMedia
-                                className={classes.cardMedia}
-                                image={product.image}
-                            />
-                            <CardContent>
-                                <Typography className={classes.productCategory} gutterBottom variant="h5" component="h2">
-                                    {product.category}
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                        )
-                }
-            </div>
-        </div>
-    )
+                    {
+                        Object.keys(products).map((item) => 
+                            {
+                                return (
+                            <Card className={classes.root}>
+                            <CardActionArea className={classes.cardActionArea}>
+                                <CardMedia
+                                    className={classes.cardMedia}
+                                    image={products[item].image[0]}
+                                />
+                                <CardContent>
+                                    <Typography className={classes.productCategory} gutterBottom variant="h5" component="h2">
+                                        {item}
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                                )})}
+                
+         </div>
+          )
+       
+      }
+        
+        
+    
 }
 
-
-
-const mapStateToProps = state => {
-    return {
-        productData: state.product
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        fetchProducts: () => dispatch(fetchProducts())
-    }
-}
-
-export default connect(
-    mapStateToProps, 
-    mapDispatchToProps
-    )(CategoriesList)
+export default CategoriesList
