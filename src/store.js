@@ -3,9 +3,12 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './reducers/rootReducer'
 
+const initialSate= {};
+
 const store = createStore(
     rootReducer,
+    initialSate,
     composeWithDevTools(applyMiddleware(thunk))
 )
 
-export default store
+export default store;
