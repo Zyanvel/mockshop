@@ -1,75 +1,77 @@
-import React, { useEffect } from 'react'
-import  { fetchProducts }  from '../actions/productsActions'
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Category from './Category.react';
+import { setCategory } from '../actions/appActions';
+import { 
+  makeStyles, 
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
 
 const useStyles = makeStyles({
-    root: {
-        width: 250,
-        height: 250,
-        margin: 15
+    container: {
+        padding: '20px',
+        display: 'flex',
+        justifyContent: 'center',
     },
 
-    cardActionArea: {
-        height: '100%'
+    card: {
+        marginLeft: 8,
+        width: 200,
     },
 
-    cardMedia: {
-      height: '60%'
+    categoryImage: {
+      height: 200
     },
 
-    productCategory: {
+    titleCase: {
         textTransform: 'capitalize',
-        height: '100%'
     },
-
   });
 
 
-  const CategoriesList = () => {
-    
-    const classes = useStyles();
-    const products = useSelector(state => state.products);
+  export default function CategoriesList() {
+    const productsByCategory = useSelector(
+      state => state.products?.productsByCategory
+    );
+    const styles = useStyles();
+
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(fetchProducts());
-      }, [dispatch]);
-
-      console.log("i am here");
-    return products === undefined ? (
-      <CircularProgress className={classes.loadingSpinner}/>
-    ) : products.error ? (
-      <h2>{products.error}</h2>
-    ) : (
-      Object.keys(products).map((category) => {
-        return (
-            <Card key={category} className={classes.root}>
-                <CardActionArea className={classes.cardActionArea}>
-                    <CardMedia
-                        className={classes.cardMedia}
-                        image={products[category][0].image}
+    return (
+      <div className={styles.container}>
+        {productsByCategory != null ? (
+          Object.keys(productsByCategory).map((category, index) => {
+            return (
+              <Card key={index} className={styles.card}>
+                <CardActionArea onClick={()=>dispatch(setCategory(category))}>
+                  <CardMedia
+                    className={styles.categoryImage}
+                    image={productsByCategory[category][0].image}
                     />
-                    <CardContent>
-                        <Typography className={classes.productCategory} gutterBottom variant="h5" component="h2">
-                            {category}
-                        </Typography>
-                    </CardContent>
+                  <CardContent>
+                    <Typography
+                      variant='h6'
+                      color='pink'
+                      className={styles.titleCase}
+                    >
+                      {category}
+                    </Typography>
+                  </CardContent>
                 </CardActionArea>
-            </Card>
-              )
-          }
-        )
-      )
+              </Card>
+            );
+          })
+        ) : (
+          <CircularProgress size={24} />
+        )}
+      </div>
+    )
   }
     
      
      
-export default CategoriesList
