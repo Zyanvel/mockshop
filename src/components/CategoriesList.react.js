@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Category from './Category.react';
+
 import { setCategory } from '../actions/appActions';
+
 import { 
   makeStyles, 
   Card,
@@ -56,7 +57,6 @@ const useStyles = makeStyles({
                   <CardContent>
                     <Typography
                       variant='h6'
-                      color='pink'
                       className={styles.titleCase}
                     >
                       {category}
