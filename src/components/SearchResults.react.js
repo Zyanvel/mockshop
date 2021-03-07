@@ -1,9 +1,9 @@
 import {React} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {setSelectedProductId} from '../actions/appActions';
+import {setSelectedProductIdOnSearchResults} from '../actions/appActions';
+import {clearSearchResults} from '../actions/appActions';
 import Backdrop from '@material-ui/core/Backdrop';
-
-
+import Button from '@material-ui/core/Button';
 
 import { 
     makeStyles, 
@@ -38,6 +38,8 @@ import {
         backgroundColor: '#fff',
         zIndex: theme.zIndex.drawer +1,
         top: 64,
+        display: 'flex',
+        flexDirection: 'column',
       }
     }));
 
@@ -45,16 +47,22 @@ function SearchResults({search}) {
     const products = useSelector(state => state.products.products)
     const dispatch = useDispatch();
     const styles = useStyles();
-    const searchProducts =  products.filter(product => product.title.toLowerCase().indexOf(search.toLowerCase()) !== -1 || product.description.toLowerCase().indexOf(search.toLowerCase()) !== -1);
-
+    const searchProducts =  products.filter(product => product.title.toLowerCase().indexOf(search.toLowerCase()) !== -1 || 
+    product.description.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
+    product.category.toLowerCase().indexOf(search.toLowerCase()) !== -1 );
     
     return (
         <Backdrop className={styles.backdrop} open={true}>
-            <div className={styles.container}>
+             <Button variant="outlined" color="secondary" onClick={()=>dispatch(clearSearchResults())}>
+                Clear Search Results!
+             </Button>
+            <h1>Hey, so you are looking for... {search}?</h1>
+                {search.length > 2 ? 
+                    <div className={styles.container}>
                     {searchProducts.map((selectedCategory, index) => {
                         return (
                         <Card key={index} className={styles.card}>
-                            <CardActionArea onClick={()=>dispatch(setSelectedProductId(selectedCategory.id))}>
+                            <CardActionArea onClick={()=>dispatch(setSelectedProductIdOnSearchResults(selectedCategory.id))}>
                             <CardMedia
                                 className={styles.categoryImage}
                                 image={[selectedCategory][0].image}
@@ -71,7 +79,10 @@ function SearchResults({search}) {
                         </Card>
                         );
                     })}
-            </div>
+                    </div>
+                    : null    
+                }
+            
         </Backdrop>
     )
 }

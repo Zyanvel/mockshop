@@ -4,6 +4,6 @@ import appReducer from '../reducers/appReducer';
 
 export default combineReducers({
     products: productsReducer,
-    category: appReducer
+    app: appReducer,
 })
 

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import CategoriesList from './CategoriesList.react';
 import {getProducts} from '../actions/productsActions'
-import {PAGES} from '../reducers/appReducer';
+import { PAGES } from '../reducers/appReducer';
+import CategoriesList from './CategoriesList.react';
 import ProductList from './Category.react';
 import Product from './Product.react';
 import NavBar from './NavBar';
@@ -20,8 +20,7 @@ function App() {
   const dispatch = useDispatch();
   const styles = useStyles();
   const {activePage, selectedCategory, selectedProductId, search} = useSelector(state=>state.app)
-  // const selectedCategory = useSelector(state => state.app.selectedCategory);
-  // const selectedProductId = useSelector(state => state.app.selectedProductId);
+  
   
   useEffect(()=> dispatch(getProducts()), [dispatch])
   
@@ -56,4 +55,3 @@ function App() {
 export default App;
 
 
-  {/* {selectedProductId ? <Product selectedProductId={selectedProductId}/> : selectedCategory ?  <ProductList selectedCategory={selectedCategory}/> : <CategoriesList/>} */}
